@@ -1,0 +1,103 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+
+    /*
+     * Complete the 'cookies' function below.
+     *
+     * The function is expected to return an INTEGER.
+     * The function accepts following parameters:
+     *  1. INTEGER k
+     *  2. INTEGER_ARRAY A
+     */
+    public static int size = 0;
+    public static int[] pq = new int[1000001];
+    public static void add(int x) {
+        pq[++size] = x;
+        int k = size;
+        while(k > 1 && pq[k] < pq[k / 2]) {
+            exch(k, k / 2);
+            k = k / 2;
+        }
+    }
+    public static void sink(int k) {
+        while (2*k <= size) {
+            int j = 2*k;
+            if (j < size && pq[j] > pq[j + 1]) j++;
+            if (pq[k] <= pq[j]) break;
+            exch(k, j);
+            k = j;
+        }
+    }
+    public static int delMin() {
+        int res = pq[1];
+        pq[1] = pq[size--];
+        sink(1);
+        return res;
+    }
+    public static int getMin() {
+        return pq[1];
+    }
+    
+    public static void exch(int i, int j) {
+        int swap = pq[i];
+        pq[i] = pq[j];
+        pq[j] = swap;
+    }
+    public static int cookies(int k, List<Integer> A) {
+    // Write your code here
+        size = 0;
+        for(int i = 0; i < A.size(); i++) {
+            add(A.get(i));
+        }
+        int cnt = 0;
+        while(size > 0) {
+            int u = delMin();
+            if(u >= k) {
+                return cnt;
+            }
+            if(size <= 0) return -1;
+            int v = delMin();
+            int tmp = u + 2 * v;
+            add(tmp);
+            cnt++;
+        }
+        return cnt;
+    }
+
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String[] firstMultipleInput = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
+
+        int n = Integer.parseInt(firstMultipleInput[0]);
+
+        int k = Integer.parseInt(firstMultipleInput[1]);
+
+        List<Integer> A = Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+            .map(Integer::parseInt)
+            .collect(toList());
+
+        int result = Result.cookies(k, A);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
