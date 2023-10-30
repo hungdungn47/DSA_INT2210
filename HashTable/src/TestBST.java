@@ -1,5 +1,5 @@
 public class TestBST {
-    public static void main(String[] args) {
+    public static void testBST() {
         String s = "PSEUDOMYTHICAL";
         BinarySearchTree<Character, Integer> bst = new BinarySearchTree<>();
         for(int i = 0; i < s.length(); i++) {
@@ -28,5 +28,20 @@ public class TestBST {
             System.out.print(c + " ");
         }
         System.out.println();
+    }
+    public static void testRedBlackTree() {
+        String s = "PSEUDOMYTHICAL";
+        RedBlackTree<Character, Integer> myRbTree = new RedBlackTree<>();
+        for(int i = 0; i < s.length(); i++) {
+            myRbTree.put(s.charAt(i), i);
+        }
+        System.out.println("In order");
+        for(Character c : myRbTree.keys()) {
+            System.out.print(c + " ");
+        }
+        System.out.println();
+    }
+    public static void main(String[] args) {
+        testRedBlackTree();
     }
 }
