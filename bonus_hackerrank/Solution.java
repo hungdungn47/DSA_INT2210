@@ -2,10 +2,10 @@ package bonus_hackerrank;
 import java.io.*;
 import java.util.*;
 
-public class Solution {
-    public static int size = 0;
-    public static int[] pq = new int[1000001];
-    public static void add(int x) {
+class MinPQ {
+    public int size = 0;
+    public int[] pq = new int[2000005];
+    public void add(int x) {
         pq[++size] = x;
         int k = size;
         while(k > 1 && pq[k] < pq[k / 2]) {
@@ -13,7 +13,10 @@ public class Solution {
             k = k / 2;
         }
     }
-    public static void sink(int k) {
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    public void sink(int k) {
         while (2*k <= size) {
             int j = 2*k;
             if (j < size && pq[j] > pq[j + 1]) j++;
@@ -22,48 +25,109 @@ public class Solution {
             k = j;
         }
     }
-    public static int delMin() {
+    public int delMin() {
         int res = pq[1];
         pq[1] = pq[size--];
         sink(1);
         return res;
     }
-    public static int getMin() {
+    public int getMin() {
         return pq[1];
     }
 
-    public static void exch(int i, int j) {
+    public void exch(int i, int j) {
         int swap = pq[i];
         pq[i] = pq[j];
         pq[j] = swap;
     }
-    public static int[] value = new int[100005];
-    public static int[] res = new int[100005];
+}
+class MaxPQ {
+    public int size = 0;
+    public int[] pq = new int[200005];
+    public void add(int x) {
+        pq[++size] = x;
+        int k = size;
+        while(k > 1 && pq[k] > pq[k / 2]) {
+            exch(k, k / 2);
+            k = k / 2;
+        }
+    }
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    public void sink(int k) {
+        while (2*k <= size) {
+            int j = 2*k;
+            if (j < size && pq[j] < pq[j + 1]) j++;
+            if (pq[k] >= pq[j]) break;
+            exch(k, j);
+            k = j;
+        }
+    }
+    public int delMax() {
+        int res = pq[1];
+        pq[1] = pq[size--];
+        sink(1);
+        return res;
+    }
+    public int getMax() {
+        return pq[1];
+    }
+
+    public void exch(int i, int j) {
+        int swap = pq[i];
+        pq[i] = pq[j];
+        pq[j] = swap;
+    }
+}
+public class Solution {
+    public static MaxPQ firstHalf = new MaxPQ();
+    public static MinPQ secondHalf = new MinPQ();
+    public static int peekMed() {
+        if(firstHalf.isEmpty()) {
+            return 0;
+        }
+        return firstHalf.getMax();
+    }
+    public static void removeMed() {
+        firstHalf.delMax();
+        update();
+    }
+    public static void update() {
+        if(firstHalf.size < secondHalf.size) {
+            firstHalf.add(secondHalf.delMin());
+        } else if(firstHalf.size > secondHalf.size + 1) {
+            secondHalf.add(firstHalf.delMax());
+        }
+    }
+    public static void insert(int x) {
+        if(x <= peekMed()) {
+            firstHalf.add(x);
+        } else {
+            secondHalf.add(x);
+        }
+        update();
+    }
     public static void main(String[] args) {
         /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
         Scanner in = new Scanner(System.in);
-        int n = in.nextInt();
-        int k = in.nextInt();
-        for(int i = 1; i <= n; i++) {
-            value[i] = in.nextInt();
-        }
-        res[0] = 0;
 
-        for(int i = 1; i <= k; i++) {
-            res[i] = res[i - 1] + value[i];
-            add(value[i]);
+        int n = in.nextInt();
+        int m = in.nextInt();
+        for(int i = 0; i < n; i++) {
+            int x = in.nextInt();
+            insert(x);
         }
-        for(int i = k + 1; i <= n; i++) {
-            res[i] = res[i - 1];
-            if(value[i] > getMin()) {
-                res[i] -= getMin();
-                res[i] += value[i];
-                delMin();
-                add(value[i]);
+        while(m-- > 0) {
+            int q = in.nextInt();
+            if(q == 1) {
+                int u = in.nextInt();
+                insert(u);
+            } else if(q == 2) {
+                removeMed();
+            } else {
+                System.out.println(peekMed());
             }
-        }
-        for(int i = 1; i <= n; i++) {
-            System.out.print(res[i] + " ");
         }
     }
 }

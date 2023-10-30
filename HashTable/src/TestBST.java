@@ -41,7 +41,25 @@ public class TestBST {
         }
         System.out.println();
     }
+    public static void testAVL_Tree() {
+        String s = "PSEUDOMYTHICAL";
+        AVL_Tree<Character, Integer> myAVL = new AVL_Tree<>();
+        for(int i = 0; i < s.length(); i++) {
+            myAVL.put(s.charAt(i), i);
+        }
+        System.out.println("In order");
+        for(Character c : myAVL.keys()) {
+            System.out.print(c + " ");
+        }
+        System.out.println();
+        myAVL.remove('E');
+        System.out.println("In order");
+        for(Character c : myAVL.keys()) {
+            System.out.print(c + " ");
+        }
+        System.out.println();
+    }
     public static void main(String[] args) {
-        testRedBlackTree();
+        testAVL_Tree();
     }
 }
