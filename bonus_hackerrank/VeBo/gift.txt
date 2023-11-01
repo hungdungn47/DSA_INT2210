@@ -2,10 +2,10 @@ package bonus_hackerrank;
 import java.io.*;
 import java.util.*;
 
-public class Solution {
+public class Solution2 {
     public static int size = 0;
-    public static int[] pq = new int[1000001];
-    public static void add(int x) {
+    public static long[] pq = new long[1000001];
+    public static void add(long x) {
         pq[++size] = x;
         int k = size;
         while(k > 1 && pq[k] < pq[k / 2]) {
@@ -22,23 +22,23 @@ public class Solution {
             k = j;
         }
     }
-    public static int delMin() {
-        int res = pq[1];
+    public static long delMin() {
+        long res = pq[1];
         pq[1] = pq[size--];
         sink(1);
         return res;
     }
-    public static int getMin() {
+    public static long getMin() {
         return pq[1];
     }
 
     public static void exch(int i, int j) {
-        int swap = pq[i];
+        long swap = pq[i];
         pq[i] = pq[j];
         pq[j] = swap;
     }
-    public static int[] value = new int[100005];
-    public static int[] res = new int[100005];
+    public static long[] value = new long[100005];
+    public static long[] res = new long[100005];
     public static void main(String[] args) {
         /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
         Scanner in = new Scanner(System.in);
@@ -56,9 +56,8 @@ public class Solution {
         for(int i = k + 1; i <= n; i++) {
             res[i] = res[i - 1];
             if(value[i] > getMin()) {
-                res[i] -= getMin();
+                res[i] -= delMin();
                 res[i] += value[i];
-                delMin();
                 add(value[i]);
             }
         }
