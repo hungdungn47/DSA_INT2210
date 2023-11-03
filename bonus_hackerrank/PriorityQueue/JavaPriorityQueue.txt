@@ -1,0 +1,81 @@
+package bonus_hackerrank;
+
+import java.io.*;
+import java.util.*;
+
+class Student implements Comparable {
+    private int id;
+    private String name;
+    private double cgpa;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getCgpa() {
+        return cgpa;
+    }
+
+    public Student(int id, String name, double cgpa) {
+        this.id = id;
+        this.name = name;
+        this.cgpa = cgpa;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Student other = (Student) o;
+        if (this.cgpa == other.cgpa) {
+            if (this.name.equals(other.name)) {
+                return Integer.compare(this.id, other.id);
+            }
+            return this.name.compareTo(other.name);
+        }
+        return Double.compare(other.cgpa, this.cgpa);
+    }
+}
+
+class Priorities {
+    public static List<Student> getStudents(List<String> events) {
+        PriorityQueue<Student> pq = new PriorityQueue<>();
+        List<Student> res = new ArrayList<>();
+        for (String event : events) {
+            String[] tmp = event.split(" ");
+            if (tmp[0].equals("ENTER")) {
+                pq.add(new Student(Integer.parseInt(tmp[3]), tmp[1], Double.parseDouble(tmp[2])));
+            } else {
+                pq.poll();
+            }
+        }
+        while (!pq.isEmpty()) {
+            res.add(pq.poll());
+        }
+        return res;
+    }
+}
+
+public class Solution {
+
+    public static void main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        in.nextLine();
+        List<String> events = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            String line = in.nextLine();
+            events.add(line);
+        }
+        List<Student> studentList = Priorities.getStudents(events);
+        if (studentList.isEmpty()) System.out.println("EMPTY");
+        else {
+            for (Student s : studentList) {
+                System.out.println(s.getName());
+            }
+        }
+    }
+}

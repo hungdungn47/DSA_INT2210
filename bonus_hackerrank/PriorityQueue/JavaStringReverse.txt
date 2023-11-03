@@ -1,0 +1,32 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+    private static boolean solve(String A) {
+        int l = 0;
+        int r = A.length() - 1;
+        while(l <= r) {
+            if(A.charAt(l) != A.charAt(r)) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc=new Scanner(System.in);
+        String A=sc.next();
+        /* Enter your code here. Print output to STDOUT. */
+        if(solve(A)) {
+            System.out.println("Yes");
+        } else {
+            System.out.println("No");
+        }
+    }
+}
+
+
+
