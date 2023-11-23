@@ -1,0 +1,10 @@
+    public static SinglyLinkedListNode insertNodeAtPosition(SinglyLinkedListNode llist, int data, int position) {
+    // Write your code here
+        if(position == 0) {
+            SinglyLinkedListNode node = new SinglyLinkedListNode(data);
+            node.next = llist;
+            return node;
+        }
+        llist.next = insertNodeAtPosition(llist.next, data, position - 1);
+        return llist;
+    }

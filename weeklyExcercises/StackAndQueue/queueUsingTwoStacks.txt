@@ -1,0 +1,51 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+    static Stack<Integer> a = new Stack<>();
+    static Stack<Integer> b = new Stack<>();
+    public static void enqueue(int value) {
+        a.push(value);
+    }
+    public static int dequeue() {
+        if(b.isEmpty()) {
+            if(a.isEmpty()) {
+                return -1;
+            }
+            while(!a.isEmpty()) {
+                b.push(a.pop());
+            }
+        }
+        return b.pop();
+    }
+    public static int peek() {
+        if(b.isEmpty()) {
+            if(a.isEmpty()) {
+                return -1;
+            }
+            while(!a.isEmpty()) {
+                b.push(a.pop());
+            }
+        }
+        return b.peek();
+    }
+    public static void main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        while(n-- > 0) {
+            int q = in.nextInt();
+            if(q == 1) {
+                int x = in.nextInt();
+                enqueue(x);
+            } else if(q == 2) {
+                dequeue();
+            } else {
+                System.out.println(peek());
+            }
+        }
+    }
+}
