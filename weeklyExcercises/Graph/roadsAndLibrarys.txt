@@ -1,0 +1,61 @@
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+    static int connectedComponent = 0;
+    static long solve(int n, ArrayList<ArrayList<Integer>> graph, int c_lib, int c_road) {
+        connectedComponent = 0;
+        boolean[] visited = new boolean[n + 1];
+        Arrays.fill(visited, false);
+        if(c_lib <= c_road) {
+            return (long) n * c_lib;
+        }
+        for(int i = 1; i <= n; i++) {
+            if(!visited[i]) {
+                dfs(graph, i, visited);
+                connectedComponent++;
+            }
+        }
+        return (long) connectedComponent * c_lib + (long) c_road * (n - connectedComponent);
+    }
+    static void dfs(ArrayList<ArrayList<Integer>> graph, int u, boolean[] visited) {
+        visited[u] = true;
+        for(int v : graph.get(u)) {
+            if(!visited[v]) {
+                dfs(graph, v, visited);
+            }
+        }
+    }
+    public static void main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
+        Scanner scanner = new Scanner(System.in);
+        int Q = scanner.nextInt();
+        for (int q = 0; q < Q; ++q) {
+            int N, M;
+            N = scanner.nextInt();
+            M = scanner.nextInt();
+            int c_lib = scanner.nextInt();
+            int c_road = scanner.nextInt();
+            if(M == 0) {
+                System.out.println(c_lib * N);
+                continue;
+            }
+            ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
+            for (int i = 0; i <= N; ++i) {
+                graph.add(new ArrayList<Integer>());
+            }
+            for (int i = 0; i < M; ++i) {
+                int n1, n2;
+                n1 = scanner.nextInt();
+                n2 = scanner.nextInt();
+                graph.get(n1).add(n2);
+                graph.get(n2).add(n1);
+            }
+            System.out.println(solve(N, graph, c_lib, c_road));
+        }
+    }
+}
