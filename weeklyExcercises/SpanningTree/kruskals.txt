@@ -1,6 +1,3 @@
-package bonus_hackerrank;
-
-import edu.princeton.cs.algs4.StdIn;
 
 import java.io.*;
 import java.math.*;
@@ -135,6 +132,7 @@ public class Solution {
 
         // Write your code here.
         System.out.println(res);
+
         bufferedReader.close();
     }
 }
