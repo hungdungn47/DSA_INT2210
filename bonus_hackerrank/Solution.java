@@ -1,140 +1,37 @@
 package bonus_hackerrank;
 
-import edu.princeton.cs.algs4.StdIn;
+import java.util.Arrays;
 
-import java.io.*;
-import java.math.*;
-import java.security.*;
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
-import java.util.regex.*;
-import java.util.stream.*;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-class Edge implements Comparable<Edge> {
-    int u;
-    int v;
-    int wt;
-    public Edge(int u, int v, int wt) {
-        this.u = u;
-        this.v = v;
-        this.wt = wt;
-    }
-    public int compareTo(Edge other) {
-        return this.wt - other.wt;
-    }
-}
-class UnionFind {
-    private int[] root;
-
-    public UnionFind(int N) {
-        root = new int[N + 5];
-        for (int i = 0; i <= N; i++) {
-            root[i] = -1;
-        }
-    }
-    public void union(int x, int y) {
-        x = getRoot(x);
-        y = getRoot(y);
-        if (root[x] < root[y]) {
-            int size_x = root[x];
-            int size_y = root[y];
-            root[y] = x;
-            root[x] = size_x + size_y;
-        } else {
-            int size_x = root[x];
-            int size_y = root[y];
-            root[x] = y;
-            root[y] = size_x + size_y;
-        }
-    }
-
-    private int getRoot(int x) {
-        if (root[x] < 0) return x;
-        return root[x] = getRoot(root[x]);
-    }
-
-    public boolean connected(int x, int y) {
-        int u = getRoot(x);
-        int v = getRoot(y);
-        return u == v;
-    }
-}
-class Result {
-
-    /*
-     * Complete the 'kruskals' function below.
-     *
-     * The function is expected to return an INTEGER.
-     * The function accepts WEIGHTED_INTEGER_GRAPH g as parameter.
-     */
-
-    /*
-     * For the weighted graph, <name>:
-     *
-     * 1. The number of nodes is <name>Nodes.
-     * 2. The number of edges is <name>Edges.
-     * 3. An edge exists between <name>From[i] and <name>To[i]. The weight of the edge is <name>Weight[i].
-     *
-     */
-
-    public static int kruskals(int gNodes, List<Integer> gFrom, List<Integer> gTo, List<Integer> gWeight) {
-        int res = 0;
-        int mstSize = 0;
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
-        for(int i = 0; i < gFrom.size(); i++) {
-            int u = gFrom.get(i);
-            int v = gTo.get(i);
-            int wt = gWeight.get(i);
-            pq.add(new Edge(u, v, wt));
-        }
-        UnionFind uf = new UnionFind(gNodes);
-        while(!pq.isEmpty() && mstSize < gNodes - 1) {
-            Edge e = pq.poll();
-            int u = e.u;
-            int v = e.v;
-            if(!uf.connected(u, v)) {
-                uf.union(u, v);
-                mstSize++;
-                res += e.wt;
+public class Solution {
+    private static int lowerBound(int[] a, int target) {
+        int l = 0;
+        int r = a.length - 1;
+        int ans = -1;
+        while(l <= r) {
+            int m = l + (r - l) / 2;
+            if(a[m] <= target) {
+                ans = a[m];
+                l = m + 1;
+            } else {
+                r = m - 1;
             }
+        }
+        return ans;
+    }
+    private static int[] solve(int[] n, int [] m) {
+        Arrays.sort(n);
+        int[] res = new int[m.length];
+        for(int i = 0; i < m.length; i++) {
+            res[i] = lowerBound(n, m[i]);
         }
         return res;
     }
-
-}
-
-public class Solution {
-    public static void main(String[] args) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-
-        String[] gNodesEdges = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
-
-        int gNodes = Integer.parseInt(gNodesEdges[0]);
-        int gEdges = Integer.parseInt(gNodesEdges[1]);
-
-        List<Integer> gFrom = new ArrayList<>();
-        List<Integer> gTo = new ArrayList<>();
-        List<Integer> gWeight = new ArrayList<>();
-
-        IntStream.range(0, gEdges).forEach(i -> {
-            try {
-                String[] gFromToWeight = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
-
-                gFrom.add(Integer.parseInt(gFromToWeight[0]));
-                gTo.add(Integer.parseInt(gFromToWeight[1]));
-                gWeight.add(Integer.parseInt(gFromToWeight[2]));
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
-        int res = Result.kruskals(gNodes, gFrom, gTo, gWeight);
-
-        // Write your code here.
-        System.out.println(res);
-        bufferedReader.close();
+    public static void main(String[] args) {
+        int[] n = new int[]{4, 11, 6, 9};
+        int[] m = new int[]{1, 6};
+        int[] res = solve(n, m);
+        for (int re : res) {
+            System.out.print(re + " ");
+        }
     }
 }
